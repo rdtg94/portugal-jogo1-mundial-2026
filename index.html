@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portugal vs DR Congo — Previsão Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch:#0a1f14;
+    --pitch-deep:#06150d;
+    --pitch-line:rgba(120,200,150,.14);
+    --gold:#f5c542;
+    --gold-soft:#ffe08a;
+    --pt-red:#d2122e;
+    --pt-green:#1f9e5a;
+    --congo:#3a7bd5;
+    --ink:#eaf3ec;
+    --ink-dim:#9fb3a6;
+    --card:rgba(255,255,255,.04);
+    --card-line:rgba(255,255,255,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--pitch-deep);
+    color:var(--ink);
+    font-family:'Archivo',system-ui,sans-serif;
+    overflow-x:hidden;
+    line-height:1.5;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ---------- atmospheric background ---------- */
+  .stadium-bg{position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #14422a 0%, var(--pitch) 38%, var(--pitch-deep) 75%);
+  }
+  .stadium-bg::before{content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(var(--pitch-line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--pitch-line) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(120% 80% at 50% 0%,#000 30%,transparent 80%);
+    opacity:.6;
+  }
+  .floodlight{position:fixed;top:-30vh;width:60vw;height:90vh;z-index:-1;
+    background:radial-gradient(ellipse at top,rgba(255,255,255,.14),transparent 60%);
+    filter:blur(8px);pointer-events:none}
+  .floodlight.l{left:-20vw;transform:rotate(18deg)}
+  .floodlight.r{right:-20vw;transform:rotate(-18deg)}
+
+  /* ---------- hero ---------- */
+  header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:80px 0 48px;position:relative}
+  .eyebrow{font-family:'Archivo Narrow';font-weight:700;letter-spacing:.32em;
+    text-transform:uppercase;font-size:13px;color:var(--gold);
+    display:flex;align-items:center;gap:14px;justify-content:center;
+    opacity:0;animation:rise .8s .1s forwards}
+  .eyebrow::before,.eyebrow::after{content:"";height:1px;width:46px;background:linear-gradient(90deg,transparent,var(--gold))}
+  .eyebrow::after{background:linear-gradient(90deg,var(--gold),transparent)}
+
+  .matchup{display:flex;align-items:center;justify-content:center;gap:clamp(16px,5vw,64px);
+    margin:38px 0 8px;flex-wrap:wrap}
+  .team{text-align:center;opacity:0;animation:rise .9s forwards}
+  .team.por{animation-delay:.25s}
+  .team.cod{animation-delay:.4s}
+  .flag{width:84px;height:84px;border-radius:50%;margin:0 auto 14px;
+    display:flex;align-items:center;justify-content:center;font-size:40px;
+    border:2px solid var(--card-line);box-shadow:0 12px 40px rgba(0,0,0,.5);
+    background:var(--card)}
+  .flag.por{background:linear-gradient(135deg,#1f9e5a 0 50%,#d2122e 50% 100%)}
+  .flag.cod{background:linear-gradient(135deg,#3a7bd5,#1a4fa0)}
+  .team h2{font-family:'Anton';font-size:clamp(28px,5vw,44px);letter-spacing:.01em;
+    text-transform:uppercase;line-height:.95}
+  .team .sub{font-family:'Archivo Narrow';font-size:13px;color:var(--ink-dim);
+    letter-spacing:.18em;text-transform:uppercase;margin-top:6px}
+  .vs{font-family:'Anton';font-size:clamp(22px,3vw,30px);color:var(--gold);
+    opacity:0;animation:rise .9s .3s forwards;position:relative}
+  .vs span{display:block;font-family:'Archivo Narrow';font-size:11px;color:var(--ink-dim);
+    letter-spacing:.2em;margin-top:6px}
+
+  .meta{text-align:center;color:var(--ink-dim);font-family:'Archivo Narrow';
+    letter-spacing:.16em;text-transform:uppercase;font-size:13px;margin-top:14px;
+    opacity:0;animation:rise .9s .5s forwards}
+  .meta b{color:var(--ink)}
+
+  .headline{text-align:center;margin:46px auto 0;max-width:760px;
+    opacity:0;animation:rise 1s .65s forwards}
+  .headline h1{font-family:'Anton';text-transform:uppercase;
+    font-size:clamp(40px,8vw,84px);line-height:.92;letter-spacing:.005em}
+  .headline h1 .hl{color:var(--gold);position:relative;white-space:nowrap}
+  .headline p{margin-top:18px;color:var(--ink-dim);font-size:clamp(16px,2.2vw,19px);
+    max-width:560px;margin-left:auto;margin-right:auto}
+
+  .scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    color:var(--ink-dim);font-family:'Archivo Narrow';letter-spacing:.2em;font-size:11px;
+    text-transform:uppercase;opacity:0;animation:rise 1s 1.1s forwards;text-align:center}
+  .scroll-cue .arrow{width:1px;height:30px;background:linear-gradient(var(--gold),transparent);
+    margin:10px auto 0;animation:cue 1.8s ease-in-out infinite}
+
+  /* ---------- main probability section ---------- */
+  section{padding:clamp(56px,9vw,104px) 0}
+  .label{font-family:'Archivo Narrow';font-weight:700;letter-spacing:.28em;
+    text-transform:uppercase;font-size:13px;color:var(--gold);text-align:center;margin-bottom:14px}
+  .sec-title{font-family:'Anton';text-transform:uppercase;text-align:center;
+    font-size:clamp(30px,5.5vw,52px);line-height:1;margin-bottom:14px}
+  .sec-intro{text-align:center;color:var(--ink-dim);max-width:600px;margin:0 auto 52px;
+    font-size:clamp(15px,2vw,18px)}
+
+  .odds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;align-items:end}
+  .odd{background:var(--card);border:1px solid var(--card-line);border-radius:20px;
+    padding:30px 22px 26px;text-align:center;position:relative;overflow:hidden;
+    transition:transform .3s,border-color .3s}
+  .odd::before{content:"";position:absolute;inset:0 0 auto 0;height:4px}
+  .odd.win::before{background:linear-gradient(90deg,var(--pt-green),var(--pt-red))}
+  .odd.draw::before{background:linear-gradient(90deg,#8a8f93,#c7ccd0)}
+  .odd.lose::before{background:linear-gradient(90deg,var(--congo),#1a4fa0)}
+  .odd.win{transform:scale(1.08);border-color:rgba(245,197,66,.45);
+    box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 0 1px rgba(245,197,66,.12)}
+  .odd .who{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;
+    letter-spacing:.14em;font-size:14px;color:var(--ink-dim);margin-bottom:10px}
+  .odd.win .who{color:var(--gold-soft)}
+  .odd .pct{font-family:'Anton';line-height:.9;font-variant-numeric:tabular-nums}
+  .odd.win .pct{font-size:clamp(64px,13vw,104px);
+    background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent}
+  .odd.draw .pct,.odd.lose .pct{font-size:clamp(44px,9vw,72px);color:var(--ink)}
+  .odd .tilde{font-size:.5em;vertical-align:.18em;opacity:.7}
+  .odd .bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);margin-top:18px;overflow:hidden}
+  .odd .bar i{display:block;height:100%;width:0;border-radius:6px;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+  .odd.win .bar i{background:linear-gradient(90deg,var(--pt-green),var(--gold))}
+  .odd.draw .bar i{background:#aeb4b8}
+  .odd.lose .bar i{background:var(--congo)}
+  .odd .crown{position:absolute;top:14px;right:16px;font-size:18px;opacity:0;transition:opacity .5s .6s}
+  .odd.win.shown .crown{opacity:1}
+
+  /* ---------- scoreline ---------- */
+  .scoreline{margin-top:64px;background:linear-gradient(135deg,rgba(245,197,66,.08),rgba(255,255,255,.02));
+    border:1px solid rgba(245,197,66,.22);border-radius:24px;padding:40px 28px;text-align:center;
+    position:relative;overflow:hidden}
+  .scoreline .tag{font-family:'Archivo Narrow';font-weight:700;letter-spacing:.24em;
+    text-transform:uppercase;font-size:12px;color:var(--gold);margin-bottom:20px}
+  .board{display:flex;align-items:center;justify-content:center;gap:clamp(18px,5vw,48px)}
+  .board .nm{font-family:'Anton';text-transform:uppercase;font-size:clamp(18px,3.5vw,30px);color:var(--ink-dim)}
+  .board .nm.win{color:var(--ink)}
+  .board .score{font-family:'Anton';font-size:clamp(56px,12vw,108px);line-height:.85;
+    font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:clamp(10px,3vw,26px)}
+  .board .score .dash{color:var(--gold);opacity:.5;font-size:.7em}
+  .board .score .a{color:#fff}
+  .board .score .b{color:var(--ink-dim)}
+  .scoreline .note{margin-top:18px;color:var(--ink-dim);font-size:14px}
+  .scoreline .note b{color:var(--gold-soft)}
+
+  /* ---------- xG / goals ---------- */
+  .goals{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+  .goalcard{background:var(--card);border:1px solid var(--card-line);border-radius:18px;padding:26px 24px;text-align:center}
+  .goalcard .who{font-family:'Archivo Narrow';font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;font-size:13px;color:var(--ink-dim);margin-bottom:8px}
+  .goalcard .xg{font-family:'Anton';font-size:clamp(40px,8vw,64px);line-height:.9}
+  .goalcard.por .xg{color:var(--pt-green)}
+  .goalcard.cod .xg{color:var(--congo)}
+  .goalcard .lab{font-family:'Archivo Narrow';font-size:12px;color:var(--ink-dim);
+    letter-spacing:.14em;text-transform:uppercase;margin-top:6px}
+
+  /* ---------- how / method strip ---------- */
+  .method{background:linear-gradient(180deg,rgba(255,255,255,.025),transparent)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+  .step{background:var(--card);border:1px solid var(--card-line);border-radius:16px;padding:26px 20px}
+  .step .n{font-family:'Anton';font-size:30px;color:var(--gold);line-height:1;margin-bottom:12px}
+  .step h3{font-family:'Archivo';font-weight:800;font-size:16px;margin-bottom:6px}
+  .step p{color:var(--ink-dim);font-size:14px}
+
+  .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+  .stat{text-align:center;background:var(--card);border:1px solid var(--card-line);
+    border-radius:16px;padding:28px 18px}
+  .stat .big{font-family:'Anton';font-size:clamp(34px,6vw,52px);color:var(--ink);line-height:.9;font-variant-numeric:tabular-nums}
+  .stat .big.good{color:var(--pt-green)}
+  .stat .cap{font-family:'Archivo Narrow';font-size:12.5px;color:var(--ink-dim);
+    letter-spacing:.12em;text-transform:uppercase;margin-top:10px}
+
+  .honest{margin-top:40px;background:rgba(58,123,213,.06);border:1px solid rgba(58,123,213,.2);
+    border-radius:18px;padding:26px 28px;color:var(--ink-dim);font-size:15px;text-align:center;max-width:720px;margin-left:auto;margin-right:auto}
+  .honest b{color:var(--ink)}
+
+  /* ---------- footer ---------- */
+  footer{padding:64px 0 80px;text-align:center;border-top:1px solid var(--card-line);margin-top:40px}
+  .sig{font-family:'Anton';text-transform:uppercase;font-size:clamp(20px,3vw,28px);letter-spacing:.02em}
+  .sig .gold{color:var(--gold)}
+  footer .role{color:var(--ink-dim);font-family:'Archivo Narrow';letter-spacing:.16em;
+    text-transform:uppercase;font-size:12.5px;margin-top:10px}
+  footer .disc{color:var(--ink-dim);font-size:12.5px;margin-top:24px;opacity:.7;max-width:560px;margin-left:auto;margin-right:auto}
+
+  /* ---------- animations ---------- */
+  @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+  .reveal.in{opacity:1;transform:translateY(0)}
+
+  @media(max-width:720px){
+    .odds{grid-template-columns:1fr;gap:14px}
+    .odd.win{transform:scale(1);order:-1}
+    .steps{grid-template-columns:1fr 1fr}
+    .trust{grid-template-columns:1fr}
+    .goals{grid-template-columns:1fr}
+    .matchup{gap:8px}
+    .team{flex:0 0 38%}
+    .vs{order:0;flex:0 0 16%;font-size:22px}
+    .vs span{font-size:10px}
+    .flag{width:64px;height:64px;font-size:30px}
+    .team h2{font-size:24px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .scroll-cue,.team,.eyebrow,.vs,.meta,.headline{opacity:1!important}
+  }
+</style>
+</head>
+<body>
+  <div class="stadium-bg"></div>
+  <div class="floodlight l"></div>
+  <div class="floodlight r"></div>
+
+  <!-- ===================== HERO ===================== -->
+  <header>
+    <div class="wrap">
+      <div class="eyebrow">Mundial 2026 · Grupo K · Houston</div>
+
+      <div class="matchup">
+        <div class="team por">
+          <div class="flag por">🇵🇹</div>
+          <h2>Portugal</h2>
+          <div class="sub">As Quinas</div>
+        </div>
+        <div class="vs">VS<span>17 Junho</span></div>
+        <div class="team cod">
+          <div class="flag cod">🇨🇩</div>
+          <h2>DR Congo</h2>
+          <div class="sub">Os Leopardos</div>
+        </div>
+      </div>
+
+      <div class="meta">Estreia no Mundial · <b>Cristiano Ronaldo</b> · 6.º Mundial</div>
+
+      <div class="headline">
+        <h1>Quem vai <span class="hl">ganhar?</span><br>Perguntei aos dados.</h1>
+        <p>Um modelo estatístico analisou <b>8 124 jogos</b> de seleções para calcular as hipóteses reais de cada resultado. Eis o veredito.</p>
+      </div>
+    </div>
+    <div class="scroll-cue">Ver previsão<div class="arrow"></div></div>
+  </header>
+
+  <!-- ===================== ODDS ===================== -->
+  <section>
+    <div class="wrap">
+      <div class="label reveal">O veredito do modelo</div>
+      <h2 class="sec-title reveal">As probabilidades</h2>
+      <p class="sec-intro reveal">Três resultados possíveis. O modelo dá a Portugal a clara vantagem — mas o futebol nunca é garantido.</p>
+
+      <div class="odds">
+        <div class="odd win" data-pct="56">
+          <div class="crown">👑</div>
+          <div class="who">Portugal vence</div>
+          <div class="pct"><span class="tilde">~</span><span class="num" data-to="56">0</span>%</div>
+          <div class="bar"><i data-w="56"></i></div>
+        </div>
+        <div class="odd draw" data-pct="30">
+          <div class="who">Empate</div>
+          <div class="pct"><span class="tilde">~</span><span class="num" data-to="30">0</span>%</div>
+          <div class="bar"><i data-w="30"></i></div>
+        </div>
+        <div class="odd lose" data-pct="14">
+          <div class="who">DR Congo vence</div>
+          <div class="pct"><span class="tilde">~</span><span class="num" data-to="14">0</span>%</div>
+          <div class="bar"><i data-w="14"></i></div>
+        </div>
+      </div>
+
+      <!-- scoreline -->
+      <div class="scoreline reveal">
+        <div class="tag">★ Resultado mais provável ★</div>
+        <div class="board">
+          <span class="nm win">POR</span>
+          <span class="score"><span class="a">1</span><span class="dash">–</span><span class="b">0</span></span>
+          <span class="nm">COD</span>
+        </div>
+        <div class="note">O placar 1–0 é o mais provável de todos, com <b>~20%</b> de hipóteses.</div>
+      </div>
+
+      <!-- goals -->
+      <div class="goals reveal">
+        <div class="goalcard por">
+          <div class="who">Portugal</div>
+          <div class="xg">1.3</div>
+          <div class="lab">golos esperados</div>
+        </div>
+        <div class="goalcard cod">
+          <div class="who">DR Congo</div>
+          <div class="xg">0.5</div>
+          <div class="lab">golos esperados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== METHOD ===================== -->
+  <section class="method">
+    <div class="wrap">
+      <div class="label reveal">Sem bola de cristal</div>
+      <h2 class="sec-title reveal">Como foi feito</h2>
+      <p class="sec-intro reveal">Nada de adivinhar. Apenas matemática aplicada à história do futebol internacional.</p>
+
+      <div class="steps">
+        <div class="step reveal"><div class="n">1</div><h3>Dados reais</h3><p>Mais de 49 000 jogos de seleções desde 1872, filtrados para os mais recentes e relevantes.</p></div>
+        <div class="step reveal"><div class="n">2</div><h3>Força de cada equipa</h3><p>O modelo aprende o poder de ataque e defesa de cada seleção a partir dos resultados.</p></div>
+        <div class="step reveal"><div class="n">3</div><h3>Jogos recentes pesam mais</h3><p>A forma atual conta mais do que vitórias de há dez anos. Tudo é ponderado no tempo.</p></div>
+        <div class="step reveal"><div class="n">4</div><h3>Milhares de simulações</h3><p>O confronto é simulado golo a golo para estimar a hipótese de cada resultado.</p></div>
+      </div>
+
+      <div class="trust">
+        <div class="stat reveal"><div class="big good">61%</div><div class="cap">de acerto em 1 327 jogos de teste</div></div>
+        <div class="stat reveal"><div class="big">55%</div><div class="cap">o supercomputador Opta dá valor quase idêntico</div></div>
+        <div class="stat reveal"><div class="big">8 124</div><div class="cap">jogos usados para treinar o modelo</div></div>
+      </div>
+
+      <div class="honest reveal">
+        <b>Honestidade antes do hype:</b> nenhum modelo prevê o futebol com certeza. A vantagem de Portugal é real e consistente — mas estreias de Mundial pregam partidas, e o DR Congo tem gente que joga na Premier League. ~56% é forte. Não é garantido.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="wrap">
+      <div class="sig">Força <span class="gold">Portugal</span> 🇵🇹</div>
+      <div class="role">Análise de dados &amp; Machine Learning · Ricardo</div>
+      <div class="disc">Modelo Dixon-Coles (Poisson bivariado) sobre dados públicos de resultados internacionais. Previsão probabilística para fins de análise e curiosidade — não é aconselhamento de apostas.</div>
+    </div>
+  </footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // count-up + bars when odds enter view
+  function animateOdds(container){
+    container.querySelectorAll('.num').forEach(function(el){
+      var to = +el.dataset.to, dur = 1300, t0 = null;
+      if(reduce){ el.textContent = to; return; }
+      function tick(ts){
+        if(!t0) t0 = ts;
+        var p = Math.min((ts - t0)/dur, 1);
+        var e = 1 - Math.pow(1-p, 3);
+        el.textContent = Math.round(to * e);
+        if(p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+    container.querySelectorAll('.bar i').forEach(function(b){
+      requestAnimationFrame(function(){ b.style.width = b.dataset.w + '%'; });
+    });
+    var win = container.querySelector('.odd.win');
+    if(win) setTimeout(function(){ win.classList.add('shown'); }, 600);
+  }
+
+  var oddsSec = document.querySelector('.odds');
+  var oddsDone = false;
+  var oddsObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting && !oddsDone){ oddsDone = true; animateOdds(oddsSec); }
+    });
+  }, {threshold:.4});
+  oddsObs.observe(oddsSec);
+
+  // generic reveal on scroll
+  var revObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); revObs.unobserve(en.target); }
+    });
+  }, {threshold:.18});
+  document.querySelectorAll('.reveal').forEach(function(el){ revObs.observe(el); });
+})();
+</script>
+</body>
+</html>
